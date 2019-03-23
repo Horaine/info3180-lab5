@@ -27,12 +27,21 @@ def home():
 def about():
     """Render the website's about page."""
     return render_template('about.html')
+    
+
+@app.route('/secure-page')
+@login_required
+def secure_page():
+    """Render website's secure page that only logged in users can access"""
+    return render_template('secure_page.html')
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-        if form.validate_on_submit(). 
+        if form.validate_on_submit().
+        if current_user.is_authenticated:
+        return redirect(url_for('secure_page'))
         
         username = form.username.data
         password = form.password.data
