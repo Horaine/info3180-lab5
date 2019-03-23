@@ -69,6 +69,32 @@ def login():
     flash_errors(form)
     return render_template('login.html', form=form)
     
+    
+@app.route("/logout")
+@login_required
+def logout():
+    # Logout the user and end the session
+    logout_user()
+    flash('You have been logged out.', 'danger')
+    return redirect(url_for('home'))
+
+
+@login_manager.user_loader
+def load_user(id):
+    return UserProfile.query.get(int(id))
+
+
+# Flash errors from the form if validation fails with Flask-WTF
+# http://flask.pocoo.org/snippets/12/
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error
+            ), 'danger')
+
+    
     if form.username.data:
             # Get the username and password values from the form.
 
